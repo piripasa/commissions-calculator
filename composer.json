@@ -1,0 +1,27 @@
+{
+    "name": "piripasa/commissions-calculator",
+    "description": "Calculate commissions for transactions",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Zaman-A-Piri Pasa",
+            "email": "pollobcse05@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}
