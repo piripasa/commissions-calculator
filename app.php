@@ -36,6 +36,7 @@ foreach ($file->getData() as $key => $value) {
     $operation->setIsEu($euChecker->check());
 
     $transactionCommission = new TransactionCommission($operation, $commission);
-    echo $transactionCommission->format($transactionCommission->calculate());
+    //echo $transactionCommission->calculate(); //actual result
+    echo $transactionCommission->format($transactionCommission->calculate()); //formatted result
     print "\n";
 }
