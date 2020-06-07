@@ -16,6 +16,6 @@ class ExchangeRates extends Provider
      */
     public function getTransformed() : array
     {
-        return json_decode($this->data, 1)['rates'];
+        return json_decode($this->getData(), 1)['rates'];
     }
 }

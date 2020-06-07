@@ -4,32 +4,38 @@ namespace App\Services\Commissions;
 
 use App\Entities\Commission;
 use App\Entities\Operation;
+use App\Services\Checkers\CheckerStrategy;
+use App\Services\Currency;
 
 class TransactionCommission extends CommissionStrategy
 {
+    protected $operation;
+    protected $commission;
+    protected $currency;
+    protected $checkerStrategy;
+
     /**
      * TransactionCommission constructor.
      * @param Operation $operation
      * @param Commission $commission
+     * @param Currency $currency
+     * @param CheckerStrategy $checkerStrategy
      */
-    public function __construct(Operation $operation, Commission $commission)
+    public function __construct(Operation $operation, Commission $commission, Currency $currency, CheckerStrategy $checkerStrategy)
     {
-        parent::__construct($operation, $commission);
+        $this->operation = $operation;
+        $this->commission = $commission;
+        $this->currency = $currency;
+        $this->checkerStrategy = $checkerStrategy;
     }
 
     public function calculate()
     {
         $amount = $this->operation->getAmount();
-        if ($this->operation->getCurrency() != 'EUR' and $this->operation->getRate() > 0) {
+        if (!$this->currency->equals(new Currency($this->operation->getCurrency())) and $this->operation->getRate() > 0) {
             $amount = $this->operation->getAmount() / $this->operation->getRate();
         }
 
-        return $amount * ($this->operation->getIsEu() ? $this->commission->getEuCommission() : $this->commission->getNonEuCommission());
-    }
-
-    public function format($result): string
-    {
-        $rounded = ceil($result * 100) / 100;
-        return number_format((float)$rounded, 2, '.', '');
+        return $amount * ($this->checkerStrategy->check() ? $this->commission->getBaseCommission() : $this->commission->getNonBaseCommission());
     }
 }

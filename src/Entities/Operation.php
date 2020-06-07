@@ -7,7 +7,6 @@ class Operation
     private $amount;
     private $currency;
     private $rate;
-    private $isEu;
 
     /**
      * @param float $amount
@@ -55,21 +54,5 @@ class Operation
     public function getRate(): float
     {
         return $this->rate;
-    }
-
-    /**
-     * @param bool $isEu
-     */
-    public function setIsEu(bool $isEu)
-    {
-        $this->isEu = $isEu;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getIsEu(): bool
-    {
-        return $this->isEu;
     }
 }

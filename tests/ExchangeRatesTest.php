@@ -35,7 +35,7 @@ class ExchangeRatesTest extends TestCase
         $mockObj = $this->makeMock(400);
 
         $mockObj->setUri('');
-        $mockObj->makeRequest();
+        $mockObj->getData();
     }
 
     public function testShouldThrowExceptionForInvalidUriArgument()
@@ -49,7 +49,7 @@ class ExchangeRatesTest extends TestCase
         $mockObj = $this->makeMock(400);
 
         $mockObj->setUri($uri);
-        $mockObj->makeRequest();
+        $mockObj->getData();
     }
 
     public function testShouldThrowExceptionForUnauthorized()
@@ -60,7 +60,7 @@ class ExchangeRatesTest extends TestCase
 
         $mockObj = $this->makeMock(401);
 
-        $mockObj->makeRequest();
+        $mockObj->getData();
     }
 
     public function testShouldReturnData()
@@ -70,7 +70,6 @@ class ExchangeRatesTest extends TestCase
         $mockObj = $this->makeMock(200, $body);
 
         $mockObj->setUri('latest');
-        $mockObj->makeRequest();
 
         $this->assertEquals($body, $mockObj->getData());
     }
@@ -82,19 +81,8 @@ class ExchangeRatesTest extends TestCase
         $mockObj = $this->makeMock(200, $body);
 
         $mockObj->setUri('latest');
-        $mockObj->makeRequest();
 
         $this->assertArrayHasKey('CAD', $mockObj->getTransformed());
-    }
-
-    public function testParamShouldArray()
-    {
-        $this->expectException(\TypeError::class);
-
-        $mockObj = $this->makeMock(200);
-
-        $mockObj->setParam(null);
-        $mockObj->makeRequest();
     }
 
     public function testMethodShouldValid()
@@ -106,7 +94,7 @@ class ExchangeRatesTest extends TestCase
         $mockObj = $this->makeMock(400);
 
         $mockObj->setMethod('Invalid');
-        $mockObj->makeRequest();
+        $mockObj->getData();
     }
 
     private function makeMock($status, $body = null)

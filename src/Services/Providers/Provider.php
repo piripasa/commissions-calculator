@@ -9,14 +9,11 @@ abstract class Provider
     protected $client;
     protected $baseUri;
     protected $headers;
-    protected $auth = [];
-    protected $param = [];
     protected $uri;
     protected $method;
     protected $data;
 
     const METHOD_GET = 'GET';
-    const METHOD_POST = 'POST';
 
     public function __construct(Client $client, string $baseUri, array $headers = [])
     {
@@ -59,22 +56,6 @@ abstract class Provider
     }
 
     /**
-     * @param array $auth
-     */
-    public function setAuth(array $auth)
-    {
-        $this->auth = $auth;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAuth() : array
-    {
-        return $this->auth;
-    }
-
-    /**
      * @param mixed $data
      */
     public function setData($data)
@@ -87,6 +68,7 @@ abstract class Provider
      */
     public function getData()
     {
+        $this->makeRequest();
         return $this->data;
     }
 
@@ -104,22 +86,6 @@ abstract class Provider
     public function getClient(): Client
     {
         return $this->client;
-    }
-
-    /**
-     * @param array $param
-     */
-    public function setParam(array $param)
-    {
-        $this->param = $param;
-    }
-
-    /**
-     * @return array
-     */
-    public function getParam() : array
-    {
-        return $this->param;
     }
 
     /**
@@ -148,7 +114,7 @@ abstract class Provider
      */
     public function setMethod(string $method)
     {
-        if (!in_array($method, [self::METHOD_GET, self::METHOD_POST])) {
+        if (!in_array($method, [self::METHOD_GET])) {
             $this->throwException('Invalid method.');
         }
         $this->method = $method;
@@ -162,7 +128,7 @@ abstract class Provider
         return $this->method;
     }
 
-    public function makeRequest()
+    private function makeRequest()
     {
         try {
             $response = $this->getClient()->request($this->getMethod(), $this->getRequestUri(), $this->getRequestOptions());
@@ -197,19 +163,9 @@ abstract class Provider
      */
     public function getRequestOptions() : array
     {
-        $request['headers'] = $this->getHeaders();
-        if ($this->getAuth()) {
-            $request['auth'] = $this->getAuth();
-        }
-        switch ($this->getMethod()) {
-            case self::METHOD_GET:
-                $request['query'] = $this->getParam();
-                break;
-            case self::METHOD_POST:
-                $request['form_params'] = $this->getParam();
-                break;
-        }
-        return $request;
+        return [
+            'headers' => $this->getHeaders()
+        ];
     }
 
     /**

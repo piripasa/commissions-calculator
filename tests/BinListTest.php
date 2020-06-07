@@ -35,7 +35,7 @@ class BinListTest extends TestCase
         $mockObj = $this->makeMock(400);
 
         $mockObj->setUri('');
-        $mockObj->makeRequest();
+        $mockObj->getData();
     }
 
     public function testShouldThrowExceptionForInvalidUriArgument()
@@ -49,7 +49,7 @@ class BinListTest extends TestCase
         $mockObj = $this->makeMock(400);
 
         $mockObj->setUri($uri);
-        $mockObj->makeRequest();
+        $mockObj->getData();
     }
 
     public function testShouldThrowExceptionForUnauthorized()
@@ -59,8 +59,7 @@ class BinListTest extends TestCase
         $this->expectExceptionCode(401);
 
         $mockObj = $this->makeMock(401);
-
-        $mockObj->makeRequest();
+        $mockObj->getData();
     }
 
     public function testShouldReturnData()
@@ -68,9 +67,7 @@ class BinListTest extends TestCase
         $body = file_get_contents($this->mockFile);
 
         $mockObj = $this->makeMock(200, $body);
-
         $mockObj->setUri('45717360');
-        $mockObj->makeRequest();
 
         $this->assertEquals($body, $mockObj->getData());
     }
@@ -80,21 +77,9 @@ class BinListTest extends TestCase
         $body = file_get_contents($this->mockFile);
 
         $mockObj = $this->makeMock(200, $body);
-
         $mockObj->setUri('45717360');
-        $mockObj->makeRequest();
 
         $this->assertArrayHasKey('alpha2', $mockObj->getTransformed());
-    }
-
-    public function testParamShouldArray()
-    {
-        $this->expectException(\TypeError::class);
-
-        $mockObj = $this->makeMock(200);
-
-        $mockObj->setParam(null);
-        $mockObj->makeRequest();
     }
 
     public function testMethodShouldValid()
@@ -106,7 +91,7 @@ class BinListTest extends TestCase
         $mockObj = $this->makeMock(400);
 
         $mockObj->setMethod('Invalid');
-        $mockObj->makeRequest();
+        $mockObj->getData();
     }
 
     private function makeMock($status, $body = null)

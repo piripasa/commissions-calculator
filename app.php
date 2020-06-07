@@ -4,6 +4,8 @@ require_once 'vendor/autoload.php';
 
 use App\Entities\Commission;
 use App\Entities\Operation;
+use App\Services\Formatter\TransactionCommissionFormatter;
+use App\Services\Currency;
 use App\Services\Commissions\TransactionCommission;
 use App\Services\Checkers\EuChecker;
 use App\Services\Readers\FileReader;
@@ -17,13 +19,12 @@ $file->read();
 $lookupApi = new BinList(new HttpClient(), 'https://lookup.binlist.net/');
 $rateApi = new ExchangeRates(new HttpClient(), 'https://api.exchangeratesapi.io/');
 $rateApi->setUri('latest');
-$rateApi->makeRequest();
 $rates = $rateApi->getTransformed();
 $commission = new Commission(0.01, 0.02);
-
+$currency = new Currency('EUR');
+$formatter = new TransactionCommissionFormatter();
 foreach ($file->getData() as $key => $value) {
     $lookupApi->setUri($value['bin']);
-    $lookupApi->makeRequest();
     $country = $lookupApi->getTransformed();
     $euChecker = new EuChecker($country['alpha2']);
 
@@ -33,10 +34,8 @@ foreach ($file->getData() as $key => $value) {
     $operation->setAmount($value['amount']);
     $operation->setCurrency($value['currency']);
     $operation->setRate($rate);
-    $operation->setIsEu($euChecker->check());
 
-    $transactionCommission = new TransactionCommission($operation, $commission);
-    //echo $transactionCommission->calculate(); //actual result
-    echo $transactionCommission->format($transactionCommission->calculate()); //formatted result
+    $transactionCommission = new TransactionCommission($operation, $commission, $currency, $euChecker);
+    echo $formatter->format($transactionCommission->calculate()); //formatted result
     print "\n";
 }

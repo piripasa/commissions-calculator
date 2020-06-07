@@ -4,50 +4,49 @@ namespace App\Entities;
 
 class Commission
 {
-    private $euCommission;
-    private $nonEuCommission;
+    private $baseCommission;
+    private $nonBaseCommission;
 
     /**
      * Commission constructor.
-     * @param string $type
-     * @param float $euCommission
-     * @param float $nonEuCommission
+     * @param float $baseCommission
+     * @param float $nonBaseCommission
      */
-    public function __construct(float $euCommission, float $nonEuCommission)
+    public function __construct(float $baseCommission, float $nonBaseCommission)
     {
-        $this->setEuCommission($euCommission);
-        $this->setNonEuCommission($nonEuCommission);
+        $this->setBaseCommission($baseCommission);
+        $this->setNonBaseCommission($nonBaseCommission);
     }
 
     /**
-     * @param float $euCommission
+     * @param float $baseCommission
      */
-    public function setEuCommission(float $euCommission)
+    public function setBaseCommission(float $baseCommission)
     {
-        $this->euCommission = $euCommission;
-    }
-
-    /**
-     * @return float
-     */
-    public function getEuCommission(): float
-    {
-        return $this->euCommission;
-    }
-
-    /**
-     * @param float $nonEuCommission
-     */
-    public function setNonEuCommission(float $nonEuCommission)
-    {
-        $this->nonEuCommission = $nonEuCommission;
+        $this->baseCommission = $baseCommission;
     }
 
     /**
      * @return float
      */
-    public function getNonEuCommission(): float
+    public function getBaseCommission(): float
     {
-        return $this->nonEuCommission;
+        return $this->baseCommission;
+    }
+
+    /**
+     * @param float $nonBaseCommission
+     */
+    public function setNonBaseCommission(float $nonBaseCommission)
+    {
+        $this->nonBaseCommission = $nonBaseCommission;
+    }
+
+    /**
+     * @return float
+     */
+    public function getNonBaseCommission(): float
+    {
+        return $this->nonBaseCommission;
     }
 }
